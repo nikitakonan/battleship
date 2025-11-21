@@ -1,6 +1,6 @@
 import { readFile } from 'node:fs/promises';
-import { resolve, dirname } from 'node:path';
 import { createServer } from 'node:http';
+import { dirname, resolve } from 'node:path';
 
 export const httpServer = createServer(async function (req, res) {
   const __dirname = resolve(dirname(''));

@@ -1,5 +1,5 @@
-import { httpServer } from "./src/http_server/index.js";
 import { WebSocketServer } from 'ws';
+import { httpServer } from "./src/http_server/index";
 
 const HTTP_PORT = 8181;
 const WS_PORT = 3000;
@@ -17,7 +17,7 @@ wss.on('connection', function connection(ws) {
 
   ws.send(JSON.stringify({
     type: 'handshake',
-    payload: 'Welcome to WebSocket server!'
+    payload: 'Welcome to WebSocket server! Bro'
   }));
 });
 
