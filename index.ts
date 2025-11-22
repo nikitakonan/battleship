@@ -11,7 +11,7 @@ import {
 import { httpServer } from './src/http_server/index';
 import type { Message } from './src/types';
 
-type ExtendedWebSocket = WebSocket & { id: string };
+type ExtendedWebSocket = WebSocket & { id: string; isAdmin?: boolean };
 
 const HTTP_PORT = 8181;
 const WS_PORT = 3000;
@@ -27,8 +27,11 @@ wss.on('connection', function connection(ws) {
   client.id = randomUUID();
   clients.add(client);
 
+  sendClientListToAdmins();
+
   client.on('close', () => {
     clients.delete(client);
+    sendClientListToAdmins();
   });
 
   client.on('error', console.error);
@@ -39,6 +42,11 @@ wss.on('connection', function connection(ws) {
       console.log('received: %s', message);
 
       switch (message.type) {
+        case 'set_admin': {
+          client.isAdmin = true;
+          sendClientListToAdmins();
+          break;
+        }
         case LOGIN_OR_CREATE_PLAYER_TYPE: {
           // Send reg response to client
           // Send update_room to all clients in the room
@@ -82,3 +90,20 @@ wss.on('connection', function connection(ws) {
 
 console.log(`Start static http server on the ${HTTP_PORT} port!`);
 httpServer.listen(HTTP_PORT);
+
+/** admin messages */
+
+function sendClientListToAdmins() {
+  const adminClients = Array.from(clients).filter((c) => c.isAdmin);
+  const clientListMessage = JSON.stringify({
+    type: 'client_list',
+    data: Array.from(clients).map((c) => ({
+      id: c.id,
+      isAdmin: c.isAdmin || false,
+    })),
+  });
+
+  adminClients.forEach((admin) => {
+    admin.send(clientListMessage);
+  });
+}

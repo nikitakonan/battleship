@@ -25,7 +25,8 @@ export type MessageType =
   | typeof ATTACK_TYPE
   | typeof RANDOM_ATTACK_TYPE
   | typeof TURN_TYPE
-  | typeof FINISH_TYPE;
+  | typeof FINISH_TYPE
+  | (string & {});
 
 export type Message = {
   type: MessageType;
