@@ -1,4 +1,5 @@
-import { WebSocketServer } from 'ws';
+import { randomUUID } from 'node:crypto';
+import { type WebSocket, WebSocketServer } from 'ws';
 import {
   ADD_SHIPS_TYPE,
   ADD_USER_TO_ROOM_TYPE,
@@ -10,6 +11,8 @@ import {
 import { httpServer } from './src/http_server/index';
 import type { Message } from './src/types';
 
+type ExtendedWebSocket = WebSocket & { id: string };
+
 const HTTP_PORT = 8181;
 const WS_PORT = 3000;
 
@@ -17,10 +20,20 @@ const wss = new WebSocketServer({
   port: WS_PORT,
 });
 
-wss.on('connection', function connection(ws) {
-  ws.on('error', console.error);
+const clients = new Set<ExtendedWebSocket>();
 
-  ws.on('message', function onMessage(data) {
+wss.on('connection', function connection(ws) {
+  const client = ws as ExtendedWebSocket;
+  client.id = randomUUID();
+  clients.add(client);
+
+  client.on('close', () => {
+    clients.delete(client);
+  });
+
+  client.on('error', console.error);
+
+  client.on('message', function onMessage(data) {
     try {
       const message = JSON.parse(data.toString()) as Message;
       console.log('received: %s', message);
