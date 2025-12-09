@@ -30,27 +30,21 @@ export type MessageType =
 
 export type Message = {
   type: MessageType;
-  data?: unknown;
+  data?: string;
   id: 0;
 };
 
 /** Player messages */
-export type LoginRequestMessage = Message & {
-  type: typeof LOGIN_OR_CREATE_PLAYER_TYPE;
-  data: {
-    name: string;
-    password: string;
-  };
+export type LoginRequestData = {
+  name: string;
+  password: string;
 };
 
-export type LoginResponseMessage = Message & {
-  type: typeof LOGIN_OR_CREATE_PLAYER_TYPE;
-  data: {
-    name: string;
-    index: number | string;
-    error: boolean;
-    errorText?: string;
-  };
+export type LoginResponseData = {
+  name: string;
+  index: number | string;
+  error: boolean;
+  errorText?: string;
 };
 
 export type UpdateWinnersResponseMessage = {

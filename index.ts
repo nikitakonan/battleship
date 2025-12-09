@@ -9,9 +9,14 @@ import {
   RANDOM_ATTACK_TYPE,
 } from './src/const';
 import { httpServer } from './src/http_server/index';
-import type { Message } from './src/types';
+import type { LoginRequestData, LoginResponseData, Message } from './src/types';
+import { users } from './src/users';
 
-type ExtendedWebSocket = WebSocket & { id: string; isAdmin?: boolean };
+type ExtendedWebSocket = WebSocket & {
+  id: string;
+  isAdmin?: boolean;
+  userId?: string;
+};
 
 const HTTP_PORT = 8181;
 const WS_PORT = 3000;
@@ -36,10 +41,11 @@ wss.on('connection', function connection(ws) {
 
   client.on('error', console.error);
 
-  client.on('message', function onMessage(data) {
+  client.on('message', function clientMessageHandler(data) {
     try {
       const message = JSON.parse(data.toString()) as Message;
       console.log('received: %s', message);
+      const parsedData = message.data ? JSON.parse(message.data) : null;
 
       switch (message.type) {
         case 'set_admin': {
@@ -48,7 +54,26 @@ wss.on('connection', function connection(ws) {
           break;
         }
         case LOGIN_OR_CREATE_PLAYER_TYPE: {
-          // Send reg response to client
+          const data = parsedData as LoginRequestData;
+
+          const newUser = {
+            id: randomUUID(),
+            name: data.name,
+            password: data.password,
+          };
+          users.push(newUser);
+          client.userId = newUser.id;
+
+          const response: Message = {
+            type: LOGIN_OR_CREATE_PLAYER_TYPE,
+            id: 0,
+            data: JSON.stringify({
+              name: data.name,
+              index: 0,
+              error: false,
+            } satisfies LoginResponseData),
+          };
+          client.send(JSON.stringify(response));
           // Send update_room to all clients in the room
           // Send update_winners to all clients in the room
           break;
