@@ -7,10 +7,14 @@ import {
   CREATE_ROOM_TYPE,
   LOGIN_OR_CREATE_PLAYER_TYPE,
   RANDOM_ATTACK_TYPE,
-} from './src/const';
-import { httpServer } from './src/http_server/index';
-import type { LoginRequestData, LoginResponseData, Message } from './src/types';
-import { users } from './src/users';
+} from './src/const.js';
+import { httpServer } from './src/http_server/index.js';
+import type {
+  LoginRequestData,
+  LoginResponseData,
+  Message,
+} from './src/types.js';
+import { users } from './src/users.js';
 
 type ExtendedWebSocket = WebSocket & {
   id: string;
@@ -18,8 +22,8 @@ type ExtendedWebSocket = WebSocket & {
   userId?: string;
 };
 
-const HTTP_PORT = 8181;
-const WS_PORT = 3000;
+const HTTP_PORT = Number(process.env['HTTP_PORT'] || 8181);
+const WS_PORT = Number(process.env['WS_PORT'] || 3000);
 
 const wss = new WebSocketServer({
   port: WS_PORT,

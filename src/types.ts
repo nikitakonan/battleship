@@ -11,7 +11,7 @@ import type {
   TURN_TYPE,
   UPDATE_ROOM_TYPE,
   UPDATE_WINNERS_TYPE,
-} from './const';
+} from './const.js';
 
 export type MessageType =
   | typeof LOGIN_OR_CREATE_PLAYER_TYPE
