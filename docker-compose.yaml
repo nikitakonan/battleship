@@ -1,0 +1,14 @@
+services:
+  battleship:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '3000:3000'
+      - '8181:8181'
+    environment:
+      - NODE_ENV=production
+      - WS_PORT=3000
+      - HTTP_PORT=8181
+    restart: unless-stopped
+    container_name: battleship-server
