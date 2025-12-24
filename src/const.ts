@@ -1,0 +1,12 @@
+export const LOGIN_OR_CREATE_PLAYER_TYPE = 'reg' as const;
+export const UPDATE_WINNERS_TYPE = 'update_winners' as const;
+export const CREATE_ROOM_TYPE = 'create_room' as const;
+export const ADD_USER_TO_ROOM_TYPE = 'add_user_to_room' as const;
+export const CREATE_GAME_TYPE = 'create_game' as const;
+export const UPDATE_ROOM_TYPE = 'update_room' as const;
+export const ADD_SHIPS_TYPE = 'add_ships' as const;
+export const START_GAME_TYPE = 'start_game' as const;
+export const ATTACK_TYPE = 'attack' as const;
+export const RANDOM_ATTACK_TYPE = 'randomAttack' as const;
+export const TURN_TYPE = 'turn' as const;
+export const FINISH_TYPE = 'finish' as const;
